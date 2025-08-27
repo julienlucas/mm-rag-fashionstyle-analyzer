@@ -1,6 +1,6 @@
 Add a star to the repo to support my work. 🙏
 
-![Fashion Style Analyzer Header](header.png)
+![Fashion Style Analyzer Header](./static/header.png)
 
 # Fashion Style Analyzer multimodal RAG
 
@@ -73,6 +73,8 @@ To monitor your application with LangSmith (if you want):
 LANGSMITH_API_KEY=your_langsmith_api_key_here
 LANGSMITH_PROJECT=fashion_style_analyzer
 ```
+
+![Langsmith monitoring](./static/langsmith-monitoring.png)
 
 go to https://console.mistral.ai create your API Key
 ```bash
