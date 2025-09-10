@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
 os.environ["LANGCHAIN_ENDPOINT"] = "https://api.smith.langchain.com"
 os.environ["LANGCHAIN_API_KEY"] = config.LANGSMITH_API_KEY
-os.environ["LANGCHAIN_PROJECT"] = "fashion_style_analyzer"
+os.environ["LANGCHAIN_PROJECT"] = "agentic_rag_multi_agent"
 
 langsmith_client = Client()
 
