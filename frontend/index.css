@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Design system pour l'application de génération IA */
-
 @layer base {
   :root {
     /* Couleurs principales - interface moderne */
@@ -74,6 +72,10 @@ ol li {
 
 strong {
   @apply text-black;
+}
+
+strong span {
+  @apply bg-gray-300 px-1 py-0.5;
 }
 
 * {

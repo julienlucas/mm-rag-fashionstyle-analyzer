@@ -1,29 +1,24 @@
-[tool.poetry]
+[project]
 name = "fashion-style-finder-rag"
-version = "0.1.0"
+version = "1.0.0"
 description = "IA system to analyze fashion & recommanding clothes"
-authors = ["julienlucas <hello@julienlucas.com>"]
+authors = [
+    {name = "julienlucas", email = "hello@julienlucas.com"}
+]
 readme = "README.md"
-package-mode = false
-
-[tool.poetry.dependencies]
-python = "~3.12.0"
-dotenv = "^0.9.9"
-image = "^1.5.33"
-langsmith = "^0.2.0"
-mistralai = "^1.9.2"
-numpy = "<2"
-panda = "^0.3.1"
-pandas = "^2.3.1"
-pillow = "^11.3.0"
-pydantic = "^2.11.7"
-python-dotenv = "^1.1.1"
-requests = "^2.32.4"
-scikit-learn = "^1.7.1"
-torch = "2.2.2"
-torchvision = "0.17.2"
-transformers = "^4.53.3"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "image>=1.5.33",
+    "langsmith>=0.2.0",
+    "mistralai>=1.9.2",
+    "numpy<2",
+    "pandas>=2.3.1",
+    "pillow>=11.3.0",
+    "pydantic>=2.11.7",
+    "python-dotenv>=1.1.1",
+    "requests>=2.32.4",
+    "scikit-learn>=1.7.1",
+    "torch==2.2.2",
+    "torchvision==0.17.2",
+    "transformers>=4.53.3",
+]

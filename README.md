@@ -45,10 +45,6 @@ pnpm build
 
 3. **Configuration** :
 Create a `.env` file with your API keys :
-```bash
-OPENAI_API_KEY=your_openai_api_key_here
-YOUTUBE_API_KEY=your_youtube_api_key_here
-```
 
 To monitor your application with LangSmith (if you want):
 
