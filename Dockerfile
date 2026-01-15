@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.12-slim
 
 RUN apt-get update && apt-get install -y \
     curl \
@@ -15,11 +15,12 @@ RUN useradd -m -u 1000 appuser
 WORKDIR /app
 
 ENV VIRTUAL_ENV=""
-ENV UV_PROJECT_ENVIRONMENT=""
+ENV UV_NO_VENV=1
+ENV UV_PYTHON=/usr/local/bin/python3
 
 COPY pyproject.toml uv.lock ./
 
-RUN uv sync --frozen --no-install-project --system
+RUN uv sync --frozen --no-install-project
 
 COPY frontend/package.json ./frontend/
 
