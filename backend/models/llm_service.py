@@ -4,7 +4,7 @@ import backend.models.config as config
 import os
 from dotenv import load_dotenv
 from langsmith import Client
-from langsmith.run_helpers import traceable
+from langsmith.run_helpers import traceable, get_current_run_tree
 
 # Configuration du logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
 os.environ["LANGCHAIN_ENDPOINT"] = "https://api.smith.langchain.com"
 os.environ["LANGCHAIN_API_KEY"] = config.LANGSMITH_API_KEY
-os.environ["LANGCHAIN_PROJECT"] = "agentic_rag_multi_agent"
+os.environ["LANGCHAIN_PROJECT"] = "style-analyzer"
 
 langsmith_client = Client()
 
@@ -78,6 +78,44 @@ class PixtralVisionService:
 
             # Accéder au contenu via les attributs de l'objet
             content = response.choices[0].message.content
+            usage = getattr(response, "usage", None)
+            if usage:
+                if isinstance(usage, dict):
+                    prompt_tokens = usage.get("prompt_tokens") or usage.get("input_tokens")
+                    completion_tokens = usage.get("completion_tokens") or usage.get("output_tokens")
+                    total_tokens = usage.get("total_tokens")
+                else:
+                    prompt_tokens = getattr(usage, "prompt_tokens", None) or getattr(usage, "input_tokens", None)
+                    completion_tokens = getattr(usage, "completion_tokens", None) or getattr(usage, "output_tokens", None)
+                    total_tokens = getattr(usage, "total_tokens", None)
+                if total_tokens is None and prompt_tokens is not None and completion_tokens is not None:
+                    total_tokens = prompt_tokens + completion_tokens
+                logger.info(
+                    "Tokens - prompt: %s, completion: %s, total: %s",
+                    prompt_tokens,
+                    completion_tokens,
+                    total_tokens,
+                )
+                run_tree = get_current_run_tree()
+                if run_tree:
+                    usage_payload = {
+                        "prompt_tokens": prompt_tokens,
+                        "completion_tokens": completion_tokens,
+                        "total_tokens": total_tokens,
+                    }
+                    new_metadata = {
+                        "llm_model": model,
+                        "vision_model": config.VISION_MODEL_ID,
+                        "token_usage": usage_payload,
+                    }
+                    if hasattr(run_tree, "add_metadata"):
+                        run_tree.add_metadata(new_metadata)
+                    elif isinstance(run_tree.metadata, dict):
+                        run_tree.metadata.update(new_metadata)
+                    if hasattr(run_tree, "add_outputs"):
+                        run_tree.add_outputs({"usage": usage_payload})
+                    elif isinstance(run_tree.outputs, dict):
+                        run_tree.outputs.update({"usage": usage_payload})
             logger.info("Réponse reçue avec une longueur de : %d", len(content))
 
             # Vérifier si la réponse semble tronquée

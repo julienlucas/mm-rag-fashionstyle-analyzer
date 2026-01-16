@@ -72,8 +72,17 @@ ol li {
   @apply text-zinc-600 text-lg leading-6;
 }
 
+ul li,
+ol li {
+  @apply mb-4;
+}
+
 strong {
   @apply text-black;
+}
+
+li span {
+  @apply bg-gray-600 text-white px-1 py-0.5;
 }
 
 * {

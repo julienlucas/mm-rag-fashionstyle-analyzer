@@ -8,7 +8,7 @@ export default defineConfig({
     host: "::",
     port: 8080,
     proxy: {
-      "/api": {
+      "/analyze": {
         target: "http://localhost:8000",
         changeOrigin: true,
       },

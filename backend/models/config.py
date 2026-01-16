@@ -8,6 +8,8 @@ LANGSMITH_API_KEY = os.getenv("LANGSMITH_API_KEY")
 
 MODEL_ID = "pixtral-large-latest"
 # MODEL_ID = "pixtral-12b-2409"
+VISION_MODEL_ID = "convnext_tiny"
+VISION_MODEL_WEIGHTS = "imagenet1k_v1"
 
 # Image processing settings
 IMAGE_SIZE = (224, 224)

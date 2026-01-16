@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { Card, CardContent, CardTitle, CardHeader, CardDescription } from "@/components/ui/card.tsx";
 import { Button } from "@/components/ui/button.tsx";
+import ContactForm from "@/components/ui/contact-form";
 import { cn } from "@/lib/utils";
 import { Upload, X, Search } from "lucide-react";
 
@@ -146,10 +147,17 @@ function Index() {
         body: formData
       })
 
-      const data = await response.json()
+      const data = await response.json().catch(() => ({}))
+      if (!response.ok) {
+        const apiError = data.Erreur || data.error || "Erreur lors de l'analyse"
+        throw new Error(apiError)
+      }
+      if (!data?.message?.bot_response) {
+        throw new Error("Réponse invalide du serveur")
+      }
 
       setAnalysis(convertMarkdownToHtml(data.message.bot_response))
-      setImageUrl(data.message.closest_image_url)
+      setImageUrl(data.message.closest_image_url || "")
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue'
       setAnalysis(`Erreur: ${errorMessage}`)
@@ -176,12 +184,18 @@ function Index() {
           </span>
         </CardTitle>
         <CardDescription className="text-center text-2xl font-bold text-black max-w-xl mx-auto leading-7">
-          Analysez le style de vos vètements et trouvez-en des similaires à ceux que
-          porte Taylor Swift
+          Analysez le style de vos vètements et trouvez-en des similaires à ceux
+          que porte Taylor Swift
         </CardDescription>
         <CardDescription className="text-center text-sm">
-          <strong>RAG Multimodal</strong> scannant 190 tenues de Taylor Swift comme données
+          <strong>RAG Multimodal</strong> scannant 190 tenues de Taylor Swift
+          comme données
         </CardDescription>
+        <img
+          src="/static/mistral.png"
+          alt=""
+          className="object-contain mx-auto flex justify-center mx-auto border border-gray-100 rounded-xl w-10 h-10 p-1 shadow-lg"
+        />
       </CardHeader>
 
       <Card className="border-none mx-auto shadow-none">
@@ -302,7 +316,10 @@ function Index() {
         </CardContent>
       </Card>
 
-      <Card className="mt-12 border-none max-w-2xl mx-auto shadow-none">
+      <Card
+        id="contact-form"
+        className="mt-12 border-none max-w-2xl mx-auto shadow-none"
+      >
         <CardContent className="p-0 border-none">
           <CardTitle
             variant="h2"
@@ -310,93 +327,90 @@ function Index() {
           >
             Étude de cas
           </CardTitle>
-          <CardTitle variant="h3">
-            MM-RAG vs Modèle entraîné : pourquoi choisir le RAG multimodal ?
+          <CardTitle variant="h3-card" className="mb-0 mt-4">
+            Le challenge
           </CardTitle>
-          <CardTitle variant="h3">Le challenge</CardTitle>
-          <p className="mb-4">
-            Créer un système de recherche de tenues similaires avec descriptions
-            détaillées, sans entraînement de modèle personnalisé :
-          </p>
-          <ul className="list-disc list-inside mb-4 space-y-2">
+          <CardTitle variant="h3" className="font-medium">
+            Créer un système de recommandation MM-RAG de tenues similaires en
+            style à 100% à celle uploadée (sans avoit d'entraînements de modèles donc)
+          </CardTitle>
+          <ul className="list-disc list-inside mb-4 space-y-4">
             <li>
-              <strong>Pas d'entraînement nécessaire</strong> : Utiliser des
-              modèles pré-entraînés (ConvNeXt + LLM) plutôt que d'entraîner un
-              ResNet50/ConvNeXt from scratch, ce qui nécessiterait un dataset
-              labellé important.
+              <strong>
+                <span>Pouvoir mettre à jour facilement le jeu de données</span>
+              </strong>
+              , c'est l'avantage d'éviter l'entraînement de modèle.
             </li>
             <li>
-              <strong>Flexibilité et génération de texte riche</strong> : Le LLM
-              génère des descriptions contextuelles détaillées (couleurs,
-              matières, style) plutôt qu'une simple classification rigide en
-              classes prédéfinies.
+              <strong>
+                Avoir un modèle vision doué pour l'analyse stylisitique des
+                tenues
+              </strong>
+              . Non seulement nous voulons faire des recommandations de tenues,
+              mais nous voulons aussi une analyse stylistique des tenues.
             </li>
             <li>
-              <strong>Mise à jour facile du dataset</strong> : Ajouter de
-              nouvelles tenues = simplement ajouter leurs embeddings au dataset,
-              pas besoin de réentraîner le modèle complet.
-            </li>
-            <li>
-              <strong>Explicabilité</strong> : Le système montre les articles
-              similaires trouvés et explique pourquoi ils sont pertinents,
-              contrairement à un modèle entraîné qui donnerait juste une classe.
-            </li>
-            <li>
-              <strong>Trade-off latence vs qualité</strong> : Accepter une
-              latence plus élevée (2-5s avec LLM) pour obtenir des descriptions
-              riches et contextuelles, plutôt qu'une prédiction ultra-rapide
-              mais limitée.
+              <strong>
+                Avoir un modèle qui détecte avec 100% de précision les vètements
+                pour faire des recommandations
+              </strong>
+              <span> pour ça il faut un modèle assez récent.</span>
             </li>
           </ul>
-          <CardTitle variant="h3">Résultats et évaluation</CardTitle>
-          <p className="mb-4">
-            Le système utilise une architecture MM-RAG hybride combinant
-            recherche vectorielle et génération LLM :
-          </p>
-          <ul className="list-inside mb-4 space-y-2">
+          <CardTitle variant="h3-card">Résultats et évaluation</CardTitle>
+          <ul className="list-inside mb-4 space-y-4">
             <li>
-              <strong>⚡ Encodage rapide</strong> : ConvNeXt-Tiny pré-entraîné
-              encode les images en ~50-100ms, recherche de similarité cosine en
-              ~10-50ms sur 190 tenues.
+              <strong>
+                <span>
+                  ⚡ 100% de précision dans la reconnaissance des vètements
+                </span>{" "}
+                du jeu de données (les tenues de Taylor Swift)
+              </strong>{" "}
+              grâce au modèle ConvNeXt-Tiny (2022). Les modèles plus anciens en
+              étaients incapables.
             </li>
             <li>
-              <strong>🎨 Génération de descriptions riches</strong> : Le LLM
-              Pixtral génère des analyses détaillées avec style, couleurs,
-              matières et liens vers articles similaires, impossible avec un
-              simple classifieur.
+              <strong>
+                <span>
+                  Anzalyse stylistique poussé et reconnaissances des matières
+                  fine
+                </span>
+                , des formes des tenues
+              </strong>{" "}
+              grâce au modèle Pixtral Large de Mistral AI.
             </li>
             <li>
-              <strong>🔄 Mise à jour sans réentraînement</strong> : Ajouter de
-              nouvelles tenues nécessite seulement de calculer leurs embeddings
-              et les ajouter au dataset, pas de réentraînement coûteux.
+              <strong>
+                🔄 Mise à jour facile des données{" "}
+                <span>car pas d'entraînement requis</span> ce qui est un
+                avatange non négligeable.
+              </strong>{" "}
+              Il suffit d'ajouter des tenues dans le jeu de données.
             </li>
             <li>
-              <strong>📊 Latence acceptable</strong> : ~2-5 secondes total
-              (encodage + recherche + génération LLM), acceptable pour une
-              application web où la qualité de la description prime sur la
-              vitesse pure.
-            </li>
-            <li>
-              <strong>💰 Coût optimisé</strong> : Utilisation de modèles
-              pré-entraînés (pas de coût d'entraînement) avec possibilité de
-              cache LLM pour réduire les appels API répétés.
+              <strong>
+                📊 Point faible, la latence est un peu longue sans GPU Nvidia,{" "}
+                <span>souvent plus de 30 secondes pour avoir un résultat</span>
+              </strong>
+              . D'où la nécéssité d'avoir un GPU NVidia minimal sur
+              l'hébergement de l'application.
+              <img src="/static/langsmith.png" alt="LangSmith" className="w-full h-auto rounded mt-3 border border-gray-100 rounded-sm" />
+              <CardDescription className="italic text-center text-xs">
+                Montoring dans LangSmith
+              </CardDescription>
             </li>
           </ul>
-          <p className="mb-4">
-            <strong>Conclusion</strong> : Le MM-RAG offre un meilleur compromis
-            pour cette application où la génération de descriptions détaillées
-            et la flexibilité priment sur la latence ultra-faible. Un modèle
-            entraîné serait plus rapide (~10-50ms) mais produirait des sorties
-            rigides sans descriptions contextuelles.
-          </p>
-          <CardTitle variant="h3" className="mt-6 text-center">
-            On discute de votre projet?
+          <CardTitle
+            variant="h3"
+            className="mt-12 max-w-xl mx-auto text-center"
+          >
+            On discute de votre projet d'automatisation ou d'application?
           </CardTitle>
-          <div className="flex justify-center">
-            <Button className="mx-auto w-full" size="xl">
-              Me contacter
-            </Button>
-          </div>
+          <CardDescription className="text-center mb-4">
+            Remplissez le formulaire ci-dessous et je vous recontacte dans les
+            24-48 heures.
+          </CardDescription>
+          <ContactForm />
         </CardContent>
       </Card>
     </main>

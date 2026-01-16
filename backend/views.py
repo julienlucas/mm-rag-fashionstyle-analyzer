@@ -1,7 +1,5 @@
 import io
 import os
-import requests
-import pickle
 from PIL import Image
 from django.http import JsonResponse
 from django.shortcuts import render

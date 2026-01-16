@@ -7,6 +7,8 @@ from torchvision.models import convnext_tiny, ConvNeXt_Tiny_Weights
 from sklearn.metrics.pairwise import cosine_similarity
 from io import BytesIO
 from PIL import Image
+from langsmith.run_helpers import traceable, get_current_run_tree
+import backend.models.config as config
 
 class ImageProcessor:
     """
@@ -40,6 +42,7 @@ class ImageProcessor:
             transforms.Normalize(mean=norm_mean, std=norm_std),
         ])
 
+    @traceable(name="convnext_tiny_encode", run_type="tool")
     def encode_image(self, image_input, is_url=True):
         """
         Encode une image et extrait son vecteur de caractéristiques.
@@ -65,6 +68,17 @@ class ImageProcessor:
             buffered = BytesIO()
             image.save(buffered, format="JPEG")
             base64_string = base64.b64encode(buffered.getvalue()).decode("utf-8")
+
+            run_tree = get_current_run_tree()
+            if run_tree:
+                new_metadata = {
+                    "vision_model": config.VISION_MODEL_ID,
+                    "vision_model_weights": config.VISION_MODEL_WEIGHTS,
+                }
+                if hasattr(run_tree, "add_metadata"):
+                    run_tree.add_metadata(new_metadata)
+                elif isinstance(run_tree.metadata, dict):
+                    run_tree.metadata.update(new_metadata)
 
             # Prétraitement ConvNeXt
             input_tensor = self.preprocess(image).unsqueeze(0).to(self.device)
