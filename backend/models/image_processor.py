@@ -1,12 +1,14 @@
 import numpy as np
 import requests
 import base64
+import os
 import torch
 import torchvision.transforms as transforms
 from torchvision.models import convnext_tiny, ConvNeXt_Tiny_Weights
 from sklearn.metrics.pairwise import cosine_similarity
 from io import BytesIO
 from PIL import Image
+import onnxruntime as ort
 from langsmith.run_helpers import traceable, get_current_run_tree
 import backend.models.config as config
 
@@ -29,11 +31,14 @@ class ImageProcessor:
             norm_std (list): Écarts-types de normalisation pour les canaux RGB
         """
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        weights = ConvNeXt_Tiny_Weights.IMAGENET1K_V1
+        self.use_onnx = bool(config.VISION_USE_ONNX and os.path.exists(config.VISION_MODEL_ONNX_PATH))
+        self.onnx_session = None
 
-        self.model = convnext_tiny(weights=weights).to(self.device)
-        self.model.eval()
-        self.preprocess = weights.transforms()
+        weights = ConvNeXt_Tiny_Weights.IMAGENET1K_V1
+        self.model = None
+        if not self.use_onnx:
+            self.model = convnext_tiny(weights=weights).to(self.device)
+            self.model.eval()
 
         # Pipeline de prétraitement d'image
         self.preprocess = transforms.Compose([
@@ -41,6 +46,20 @@ class ImageProcessor:
             transforms.ToTensor(),
             transforms.Normalize(mean=norm_mean, std=norm_std),
         ])
+
+        if self.use_onnx:
+            self._warmup_onnx()
+
+    def _get_onnx_session(self):
+        if self.onnx_session is None:
+            self.onnx_session = ort.InferenceSession(config.VISION_MODEL_ONNX_PATH)
+        return self.onnx_session
+
+    def _warmup_onnx(self):
+        session = self._get_onnx_session()
+        input_name = session.get_inputs()[0].name
+        dummy = np.zeros((1, 3, 224, 224), dtype=np.float32)
+        session.run(None, {input_name: dummy})
 
     @traceable(name="convnext_tiny_encode", run_type="tool")
     def encode_image(self, image_input, is_url=True):
@@ -81,10 +100,17 @@ class ImageProcessor:
                     run_tree.metadata.update(new_metadata)
 
             # Prétraitement ConvNeXt
-            input_tensor = self.preprocess(image).unsqueeze(0).to(self.device)
-            with torch.no_grad():
-                features = self.model(input_tensor)
-            feature_vector = features.cpu().numpy().flatten()
+            input_tensor = self.preprocess(image).unsqueeze(0)
+            if self.use_onnx:
+                session = self._get_onnx_session()
+                input_name = session.get_inputs()[0].name
+                outputs = session.run(None, {input_name: input_tensor.numpy().astype(np.float32)})
+                feature_vector = np.array(outputs[0]).flatten()
+            else:
+                input_tensor = input_tensor.to(self.device)
+                with torch.no_grad():
+                    features = self.model(input_tensor)
+                feature_vector = features.cpu().numpy().flatten()
 
             return {"base64": base64_string, "vector": feature_vector}
         except Exception as e:

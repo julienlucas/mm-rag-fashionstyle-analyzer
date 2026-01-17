@@ -332,7 +332,8 @@ function Index() {
           </CardTitle>
           <CardTitle variant="h3" className="font-medium">
             Créer un système de recommandation MM-RAG de tenues similaires en
-            style à 100% à celle uploadée (sans avoit d'entraînements de modèles donc)
+            style à 100% à celle uploadée (sans avoit d'entraînements de modèles
+            donc)
           </CardTitle>
           <ul className="list-disc list-inside mb-4 space-y-4">
             <li>
@@ -343,18 +344,18 @@ function Index() {
             </li>
             <li>
               <strong>
-                Avoir un modèle vision doué pour l'analyse stylisitique des
-                tenues
+                  Avoir 2 choses : <span>un modèle vision doué pour l'analyse
+                  stylisitique + un MM-RAG qui recommande des tenues
+                </span>
               </strong>
-              . Non seulement nous voulons faire des recommandations de tenues,
-              mais nous voulons aussi une analyse stylistique des tenues.
+              . Pour l'analyse stylistique il faut donc un modèle doué en vision, exemple Pixtral de Mistral AI.
             </li>
             <li>
               <strong>
                 Avoir un modèle qui détecte avec 100% de précision les vètements
                 pour faire des recommandations
               </strong>
-              <span> pour ça il faut un modèle assez récent.</span>
+              <span> pour ça il faut un modèle d'embeddings vision très performant.</span>
             </li>
           </ul>
           <CardTitle variant="h3-card">Résultats et évaluation</CardTitle>
@@ -362,7 +363,8 @@ function Index() {
             <li>
               <strong>
                 <span>
-                  ⚡ 100% de précision dans la reconnaissance des vètements
+                  ⚡ Pas besoin de reranker, 100% de précision atteinte dans la
+                  reconnaissance des vètements
                 </span>{" "}
                 du jeu de données (les tenues de Taylor Swift)
               </strong>{" "}
@@ -394,7 +396,11 @@ function Index() {
               </strong>
               . D'où la nécéssité d'avoir un GPU NVidia minimal sur
               l'hébergement de l'application.
-              <img src="/static/langsmith.png" alt="LangSmith" className="w-full h-auto rounded mt-3 border border-gray-100 rounded-sm" />
+              <img
+                src="/static/langsmith.png"
+                alt="LangSmith"
+                className="w-full h-auto rounded mt-3 border border-gray-100 rounded-sm"
+              />
               <CardDescription className="italic text-center text-xs">
                 Montoring dans LangSmith
               </CardDescription>

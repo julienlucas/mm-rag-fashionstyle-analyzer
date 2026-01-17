@@ -10,6 +10,8 @@ MODEL_ID = "pixtral-large-latest"
 # MODEL_ID = "pixtral-12b-2409"
 VISION_MODEL_ID = "convnext_tiny"
 VISION_MODEL_WEIGHTS = "imagenet1k_v1"
+VISION_MODEL_ONNX_PATH = "./backend/models/convnext_tiny.onnx"
+VISION_USE_ONNX = True
 
 # Image processing settings
 IMAGE_SIZE = (224, 224)
