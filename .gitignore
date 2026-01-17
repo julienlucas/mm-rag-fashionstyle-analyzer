@@ -1,3 +1,5 @@
+backend/models/convnext_tiny.onnx
+backend/models/.cache/
 .env
 **/.venv/
 **/venv/

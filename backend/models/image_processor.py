@@ -9,6 +9,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 from io import BytesIO
 from PIL import Image
 import onnxruntime as ort
+from pathlib import Path
+from huggingface_hub import hf_hub_download
 from langsmith.run_helpers import traceable, get_current_run_tree
 import backend.models.config as config
 
@@ -31,7 +33,9 @@ class ImageProcessor:
             norm_std (list): Écarts-types de normalisation pour les canaux RGB
         """
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.use_onnx = bool(config.VISION_USE_ONNX and os.path.exists(config.VISION_MODEL_ONNX_PATH))
+        self.root_dir = Path(__file__).resolve().parents[2]
+        self.onnx_path = str(self.root_dir / "backend" / "models" / "convnext_tiny.onnx")
+        self.use_onnx = bool(config.VISION_USE_ONNX)
         self.onnx_session = None
 
         weights = ConvNeXt_Tiny_Weights.IMAGENET1K_V1
@@ -48,12 +52,29 @@ class ImageProcessor:
         ])
 
         if self.use_onnx:
+            self._ensure_onnx_file()
             self._warmup_onnx()
 
     def _get_onnx_session(self):
         if self.onnx_session is None:
-            self.onnx_session = ort.InferenceSession(config.VISION_MODEL_ONNX_PATH)
+            self.onnx_session = ort.InferenceSession(self.onnx_path)
         return self.onnx_session
+
+    def _ensure_onnx_file(self):
+        if os.path.exists(self.onnx_path):
+            return
+        hf_token = os.getenv("HF_TOKEN") or os.getenv("HUGGINGFACE_TOKEN")
+        local_dir = os.path.dirname(self.onnx_path)
+        local_path = hf_hub_download(
+            repo_id=config.VISION_MODEL_ONNX_REPO,
+            filename=os.path.basename(self.onnx_path),
+            token=hf_token,
+            local_dir=local_dir,
+            local_dir_use_symlinks=False,
+        )
+        os.makedirs(local_dir, exist_ok=True)
+        if local_path != self.onnx_path:
+            os.replace(local_path, self.onnx_path)
 
     def _warmup_onnx(self):
         session = self._get_onnx_session()

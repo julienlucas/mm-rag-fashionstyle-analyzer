@@ -12,6 +12,7 @@ VISION_MODEL_ID = "convnext_tiny"
 VISION_MODEL_WEIGHTS = "imagenet1k_v1"
 VISION_MODEL_ONNX_PATH = "./backend/models/convnext_tiny.onnx"
 VISION_USE_ONNX = True
+VISION_MODEL_ONNX_REPO = "julienlucas/convnext-tiny-onnx"
 
 # Image processing settings
 IMAGE_SIZE = (224, 224)
