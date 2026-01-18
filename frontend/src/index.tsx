@@ -331,52 +331,38 @@ function Index() {
             Le challenge
           </CardTitle>
           <CardTitle variant="h3" className="font-medium">
-            Créer un système de recommandation MM-RAG de tenues similaires en
-            style à 100% à celle uploadée (sans avoit d'entraînements de modèles
+            Avoir un système de recommandation MM-RAG de tenues au style
+            similaires à l'image uploadée (sans entraînements de modèl
             donc)
           </CardTitle>
           <ul className="list-disc list-inside mb-4 space-y-4">
             <li>
               <strong>
-                <span>Pouvoir mettre à jour facilement le jeu de données</span>
+                Pouvoir mettre à jour facilement le jeu de données
               </strong>
-              , c'est l'avantage d'éviter l'entraînement de modèle.
+              , et ainsi éviter de lancer des entraînements continuels d'un modèle.
             </li>
             <li>
               <strong>
-                  Avoir 2 choses : <span>un modèle vision doué pour l'analyse
-                  stylisitique + un MM-RAG qui recommande des tenues
-                </span>
-              </strong>
-              . Pour l'analyse stylistique il faut donc un modèle doué en vision, exemple Pixtral de Mistral AI.
+                Avoir un modèle de vision spécifique pour le RAG</strong>, précis pour recommander des tenues
             </li>
             <li>
-              <strong>
-                Avoir un modèle qui détecte avec 100% de précision les vètements
-                pour faire des recommandations
-              </strong>
-              <span> pour ça il faut un modèle d'embeddings vision très performant.</span>
+              <strong>Avoir un 2ème modèle vision spécifique à l'analyse stylistique</strong>
+              , suffisament capable, exemple les modèles Pixtral de Mistral AI.
             </li>
           </ul>
           <CardTitle variant="h3-card">Résultats et évaluation</CardTitle>
           <ul className="list-inside mb-4 space-y-4">
             <li>
               <strong>
-                <span>
-                  ⚡ Pas besoin de reranker, 100% de précision atteinte dans la
-                  reconnaissance des vètements
-                </span>{" "}
-                du jeu de données (les tenues de Taylor Swift)
-              </strong>{" "}
-              grâce au modèle ConvNeXt-Tiny (2022). Les modèles plus anciens en
-              étaients incapables.
+                ⚡ Pas besoin de reranker <span>100% de précision atteinte dans la
+                reconnaissance des vètements</span>
+              </strong>
+                {" "} du jeu de données (les tenues de Taylor Swift) grâce au modèle ConvNeXt-Tiny (2022). Les modèles plus anciens en étaients incapables.
             </li>
             <li>
               <strong>
-                <span>
-                  Anzalyse stylistique poussé et reconnaissances des matières
-                  fine
-                </span>
+                  Analyse stylistique poussé et <span>reconnaissances des matières</span>
                 , des formes des tenues
               </strong>{" "}
               grâce au modèle Pixtral Large de Mistral AI.
@@ -384,18 +370,13 @@ function Index() {
             <li>
               <strong>
                 🔄 Mise à jour facile des données{" "}
-                <span>car pas d'entraînement requis</span> ce qui est un
+                <span>car pas d'entraînement requis</span></strong> ce qui est un
                 avatange non négligeable.
-              </strong>{" "}
               Il suffit d'ajouter des tenues dans le jeu de données.
             </li>
             <li>
               <strong>
-                📊 Point faible, la latence est un peu longue sans GPU Nvidia,{" "}
-                <span>souvent plus de 30 secondes pour avoir un résultat</span>
-              </strong>
-              . D'où la nécéssité d'avoir un GPU NVidia minimal sur
-              l'hébergement de l'application.
+                📊 <span>la latence est un peu longue c'est un point faible</span>.</strong> D'où la nécéssité d'avoir un GPU NVidia minimal sur l'hébergement final en prod de l'application.
               <img
                 src="/static/langsmith.png"
                 alt="LangSmith"

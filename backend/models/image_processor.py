@@ -41,8 +41,8 @@ class ImageProcessor:
         weights = ConvNeXt_Tiny_Weights.IMAGENET1K_V1
         self.model = None
         if not self.use_onnx:
-            self.model = convnext_tiny(weights=weights).to(self.device)
-            self.model.eval()
+        self.model = convnext_tiny(weights=weights).to(self.device)
+        self.model.eval()
 
         # Pipeline de prétraitement d'image
         self.preprocess = transforms.Compose([
@@ -129,9 +129,9 @@ class ImageProcessor:
                 feature_vector = np.array(outputs[0]).flatten()
             else:
                 input_tensor = input_tensor.to(self.device)
-                with torch.no_grad():
-                    features = self.model(input_tensor)
-                feature_vector = features.cpu().numpy().flatten()
+            with torch.no_grad():
+                features = self.model(input_tensor)
+            feature_vector = features.cpu().numpy().flatten()
 
             return {"base64": base64_string, "vector": feature_vector}
         except Exception as e:

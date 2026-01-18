@@ -125,7 +125,7 @@ const App = () => {
               rel="noreferrer"
               className="hover:underline"
             >
-              Fakefinder Nano Banana Pro
+            Fakefinder Nano Banana Pro
             </a>
           </CardDescription>
           <CardDescription className="text-sm flex items-center gap-1">
@@ -135,7 +135,7 @@ const App = () => {
               rel="noreferrer"
               className="hover:underline"
             >
-              DocChat - RAG Agentique pour docs techniques
+            DocChat - RAG Agentique pour docs techniques
             </a>
           </CardDescription>
           <CardDescription className="text-sm flex items-center gap-1">
@@ -145,7 +145,7 @@ const App = () => {
               rel="noreferrer"
               className="hover:underline"
             >
-              PneumoDiag - Pneumonia Diagnostic Assistant
+            PneumoDiag - Pneumonia Diagnostic Assistant
             </a>
           </CardDescription>
           <div className="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8 py-4 pt-8">
