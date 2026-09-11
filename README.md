@@ -1,6 +1,6 @@
 If you like my work, add a star. 🙏
 
-![Fashion Style Analyzer Header](./static/header.png)
+![Fashion Style Analyzer Header](./static/header-a.png)
 
 # Multimodal RAG for fashion outfit recommandations
 
