@@ -3,13 +3,34 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Fashion Style Analyzer</title>
-    <meta name="description" content="Fashion Style Analyzer" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <title>StyleAnalyzer — RAG multimodal mode, étude de cas & démo · Julien Lucas</title>
+    <meta
+      name="description"
+      content="Étude de cas d'un RAG multimodal pour la mode : ConvNeXt-Tiny élagué et quantizé en INT8 pour retrouver la tenue la plus proche, Pixtral 12B pour l'analyse stylistique, articles avec prix et liens."
+    />
+    <meta name="author" content="Julien Lucas" />
+    <meta property="og:title" content="StyleAnalyzer — RAG multimodal mode" />
+    <meta
+      property="og:description"
+      content="Recherche visuelle ConvNeXt-Tiny INT8 (29 Mo) + analyse stylistique Pixtral 12B, sans entraînement : ajouter une tenue suffit à mettre le catalogue à jour."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/static/header.png" />
+    <link rel="icon" href="/static/mistral.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <meta name="theme-color" content="#f5f1ea" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e0d0c" media="(prefers-color-scheme: dark)" />
+    <!--
+      Geist (display + corps), Geist Mono (étiquettes, chiffres) et Instrument Serif
+      (mots accentués en italique). `display=swap` fait émettre `font-display: swap`
+      dans chaque @font-face servi par Google ; les faces de repli metric-matched
+      déclarées dans styles.css évitent le décalage pendant le swap.
+    -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Gabarito:wght@400..900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Roboto:ital,wght@0,100..900;1,100..900&family=Unbounded:wght@200..900&display=swap"
-      rel="stylesheet">
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <div id="root"></div>
